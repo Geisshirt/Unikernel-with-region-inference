@@ -22,7 +22,7 @@ provision:
     script: |
       # System tools
       apt-get update
-      DEBIAN_FRONTEND=noninteractive apt-get install -yq gcc make net-tools uml-utilities tshark
+      DEBIAN_FRONTEND=noninteractive apt-get install -yq gcc make unzip net-tools uml-utilities tshark
       
       # Install TUN/TAP
       modprobe tun
@@ -35,6 +35,9 @@ provision:
       wget https://github.com/diku-dk/smlpkg/releases/download/v0.1.4/smlpkg-bin-dist-linux.tgz
       tar xzf smlpkg-bin-dist-linux.tgz
       echo "export PATH=\$HOME/smlpkg-bin-dist-linux/bin:\$PATH" >> ~/.bashrc
+
+      # Sync smlpkg
+      smlpkg sync
 
       # Install mlkit
       wget https://github.com/melsman/mlkit/releases/download/v4.7.9/mlkit-bin-dist-linux.tgz
