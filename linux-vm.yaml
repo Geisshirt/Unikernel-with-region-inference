@@ -40,7 +40,7 @@ provision:
       smlpkg sync
 
       # Install mlkit
-      wget https://github.com/melsman/mlkit/releases/download/v4.7.9/mlkit-bin-dist-linux.tgz
+      wget https://github.com/melsman/mlkit/releases/download/v4.7.13/mlkit-bin-dist-linux.tgz
       tar xzf mlkit-bin-dist-linux.tgz
       echo "export PATH=\$HOME/mlkit-bin-dist-linux/bin:\$PATH" >> ~/.bashrc
 
