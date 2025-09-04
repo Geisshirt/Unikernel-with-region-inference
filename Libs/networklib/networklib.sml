@@ -183,6 +183,19 @@ structure Network : NETWORK = struct
                                                |> ipv4Send ({identification = (#identification ipv4Header), dstMac = dstMac, protocol = IPv4.UDP, dest_addr = #source_addr ipv4Header})
         end
 
+    fun handleTCP dstMac (IPv4.Header ipv4Header) payload =
+        let 
+            val (TCP.Header tcpHeader, tcpPayload) = payload |> TCP.decode
+            val (TCP.Header tcpHeader2, tcpPayload2) = TCP.encode (TCP.Header tcpHeader) tcpPayload |> TCP.decode
+            (* val found = List.find (fn (port  , cb) => (#dest_port udpHeader) = port) (!listenOn) *)
+        in  TCP.toString (TCP.Header tcpHeader) |> logPrint;
+            "Printing payload!\n" |> logPrint; 
+            tcpPayload |> logPrint;
+            "Printing encode -> decode v2\n" |> logPrint;
+            TCP.toString (TCP.Header tcpHeader2) |> logPrint;
+            tcpPayload2 |> logPrint
+        end
+
     fun handleIPv4 (Eth.Header ethHeader) ethFrame = 
         let val (IPv4.Header ipv4Header, ipv4Pay) = String.extract (ethFrame, 14, NONE) |> IPv4.decode
             val payloadOpt = 
@@ -201,6 +214,7 @@ structure Network : NETWORK = struct
             SOME payload => (
                 case (#protocol ipv4Header) of 
                   IPv4.UDP => handleUDP (#dstMac ethHeader) (IPv4.Header ipv4Header) payload
+                | IPv4.TCP => (logPrint "got TCP!\n"; handleTCP (#dstMac ethHeader) (IPv4.Header ipv4Header) payload)
                 | _ => logPrint "IPv4 Handler: Protocol is not supported.\n"
             )
             | NONE => ()
